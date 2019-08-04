@@ -189,22 +189,25 @@ const NimbleEmoji = (props) => {
     }
   }
 
-  if (props.html) {
+  const _props = {
+    onClick: (e) => _handleClick(e, props),
+    onMouseEnter: (e) => _handleOver(e, props),
+    onMouseLeave: (e) => _handleLeave(e, props),
+    'aria-label': label,
+    title,
+    className,
+  }
+
+  if (props.render) {
+    return props.render({ ..._props, style })
+  } else if (props.html) {
     style = _convertStyleToCSS(style)
     return `<${Tag.name} style='${style}' aria-label='${label}' ${
       title ? `title='${title}'` : ''
     } class='${className}'>${children || ''}</${Tag.name}>`
   } else {
     return (
-      <Tag.name
-        onClick={(e) => _handleClick(e, props)}
-        onMouseEnter={(e) => _handleOver(e, props)}
-        onMouseLeave={(e) => _handleLeave(e, props)}
-        aria-label={label}
-        title={title}
-        className={className}
-        {...Tag.props}
-      >
+      <Tag.name {..._props} {...Tag.props}>
         <span style={style}>{children}</span>
       </Tag.name>
     )
